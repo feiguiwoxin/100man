@@ -1,7 +1,6 @@
 package Start;
 
 import UI.GameFrame;
-import UI.GamePanel;
 
 public class GameStart {
 
