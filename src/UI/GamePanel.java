@@ -19,12 +19,13 @@ import javax.swing.JPanel;
 import Control.GameControl;
 import Control.OptionControl;
 import Item.square;
+import Start.GameStart;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements Runnable{
-	public static final Image Screen_S = new ImageIcon("IMG/Screen_S.png").getImage();
-	public static final Image Screen_P = new ImageIcon("IMG/Screen_P.png").getImage();
-	public static final Image BG = new ImageIcon("IMG/BG.jpg").getImage();
+	public static final Image Screen_S = new ImageIcon(GameStart.class.getResource("/IMG/Screen_S.png")).getImage();
+	public static final Image Screen_P = new ImageIcon(GameStart.class.getResource("/IMG/Screen_P.png")).getImage();
+	public static final Image BG = new ImageIcon(GameStart.class.getResource("/IMG/BG.jpg")).getImage();
 	private LayerScreen screen = null;
 	private LayerRecord record = null;
 	private LayerScore score = null;
@@ -100,7 +101,7 @@ public class GamePanel extends JPanel implements Runnable{
 	{
 		StopGame();
 		CopyOnWriteArrayList<square> squares = screen.getSquares();
-		File file = new File("IMG/record.dat");
+		File file = new File("./record.dat");
 		BufferedWriter bw = null;
 		try {
 			bw = new BufferedWriter(new FileWriter(file));
@@ -125,12 +126,11 @@ public class GamePanel extends JPanel implements Runnable{
 			}
 		}
 		JOptionPane.showMessageDialog(null, "Save OK~~");
-		StartGame();
 	}
 	
 	public void LoadGame()
 	{
-		File file = new File("IMG/record.dat");
+		File file = new File("./record.dat");
 		String line = null;
 		String[] data = null;
 		

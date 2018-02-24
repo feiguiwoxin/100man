@@ -1,7 +1,6 @@
 package UI;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,7 +77,7 @@ public class LayerRecord {
 	@SuppressWarnings("unchecked")
 	private void LoadRecord()
 	{
-		File file = new File("IMG/rank.dat");
+		File file = new File("./rank.dat");
 		ObjectInputStream os = null;
 	
 		try {
@@ -104,7 +103,7 @@ public class LayerRecord {
 	{
 		if(records == null) return;
 			
-		File file = new File("IMG/rank.dat");
+		File file = new File("./rank.dat");
 		ObjectOutputStream os = null;
 		
 		try {

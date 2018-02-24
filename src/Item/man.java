@@ -5,6 +5,8 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+import Start.GameStart;
+
 public class man {
 
 	public int x;
@@ -13,7 +15,7 @@ public class man {
 	public int runspeed = 3;
 	public int dropspeed = 2;
 	public int direction = 0;
-	private static final Image Man = new ImageIcon("IMG/man.png").getImage();	
+	private static final Image Man = new ImageIcon(GameStart.class.getResource("/IMG/man.png")).getImage();	
 	
 	public void init()
 	{

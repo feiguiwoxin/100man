@@ -5,9 +5,11 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+import Start.GameStart;
+
 public class LayerScore {
 
-	public static final Image Num = new ImageIcon("IMG/Num.png").getImage();
+	public static final Image Num = new ImageIcon(GameStart.class.getResource("/IMG/Num.png")).getImage();
 	public int level = 0;
 	
 	public LayerScore()

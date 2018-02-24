@@ -7,6 +7,8 @@ import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 
+import Start.GameStart;
+
 public class square {
 	
 	public int x;
@@ -15,7 +17,7 @@ public class square {
 	public static int dropspeed = 1;
 	public static final int width = 70;
 	public static final int height = 16;
-	public static final Image Square = new ImageIcon("IMG/Square.png").getImage();
+	public static final Image Square = new ImageIcon(GameStart.class.getResource("/IMG/Square.png")).getImage();
 	private boolean touched = false;
 	
 	public square(int x,int y,int type)
