@@ -1,5 +1,7 @@
 package UI;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.BufferedReader;
@@ -47,11 +49,13 @@ public class GamePanel extends JPanel implements Runnable{
 		super.paintComponent(g);
 		this.requestFocus();
 		
+		g.setColor(Color.GREEN);
+		g.setFont(new Font("宋体",Font.BOLD,20));
 		g.drawImage(BG, 0, 0, GameFrame.WIDTH, GameFrame.HEIGHT - 32, null);
 		g.drawImage(Screen, 0, 0, null);
 		screen.drawImg(g);
 		score.drawImg(g);
-		record.drawImg(g);
+		record.drawImg(g, score.level);
 	}
 	
 	public void StartGame()
@@ -213,8 +217,19 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 		
 		if(screen.GameStat != false)
-		{
-			JOptionPane.showConfirmDialog(null, "Game Over", "游戏提示", JOptionPane.CLOSED_OPTION);
+		{		
+			int pos = record.needRank(score.level);
+			
+			if(pos >= 0)
+			{
+				String name = JOptionPane.showInputDialog("您破纪录了，请输入您的姓名：", "无名");
+				record.RankIn(name, score.level, pos);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Game Over");
+			}
+			
 			ResetGame();
 		}
 	}
