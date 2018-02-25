@@ -1,13 +1,13 @@
 package UI;
 
 import java.awt.Graphics;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 
 import Item.man;
 import Item.square;
 
 public class LayerScreen {
-	private CopyOnWriteArrayList<square> squares = new CopyOnWriteArrayList<square>();
+	private ArrayList<square> squares = new ArrayList<square>();
 	private man player = new man();
 	public boolean GameStat = false;
 	
@@ -21,7 +21,7 @@ public class LayerScreen {
 		return player;
 	}
 	
-	public CopyOnWriteArrayList<square> getSquares()
+	public ArrayList<square> getSquares()
 	{
 		return squares;
 	}
@@ -128,9 +128,6 @@ public class LayerScreen {
 			case 3:
 				player.health = player.health -1;
 				break;
-			case 4:
-				s.destorySelfOndelay();
-				break;
 			}
 		}
 	}
@@ -198,10 +195,7 @@ public class LayerScreen {
 	
 	public void ClearSquare()
 	{	
-		for(int i = squares.size() - 1; i >= 0; i--)
-		{
-			squares.remove(i);
-		}	
+		squares.clear();
 	}
 	
 	public void addSquare(square s)

@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -114,7 +113,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public void RecordGame()
 	{
 		StopGame();
-		CopyOnWriteArrayList<square> squares = screen.getSquares();
+		ArrayList<square> squares = screen.getSquares();
 		File file = new File("./record.dat");
 		BufferedWriter bw = null;
 		try {
@@ -124,7 +123,7 @@ public class GamePanel extends JPanel implements Runnable{
 			bw.write("step,"+step+"\r\n");
 			for(square s:squares)
 			{
-				bw.write("square,"+s.x+","+s.y+","+s.type+","+s.gettouched()+"\r\n");
+				bw.write("square,"+s.x+","+s.y+","+s.type+","+s.gettouched()+","+s.destroytime+"\r\n");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -182,6 +181,7 @@ public class GamePanel extends JPanel implements Runnable{
 				{
 					square s= new square(Integer.parseInt(data[1]), Integer.parseInt(data[2]), Integer.parseInt(data[3]));
 					s.settouched(Integer.parseInt(data[4]));
+					s.destroytime = Integer.parseInt(data[5]);
 					screen.addSquare(s);
 				}
 			}

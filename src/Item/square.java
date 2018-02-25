@@ -2,8 +2,6 @@ package Item;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 
@@ -14,6 +12,7 @@ public class square {
 	public int x;
 	public int y;
 	public int type;
+	public int destroytime = 0;
 	public static int dropspeed = 1;
 	public static final int width = 70;
 	public static final int height = 16;
@@ -34,7 +33,6 @@ public class square {
 	
 	public int gettouched()
 	{
-		if(type == 4) return 0;
 		if(touched) return 1;
 		return 0;
 	}
@@ -49,12 +47,18 @@ public class square {
 		{
 			touched = false;
 		}
-	}
-	
+	}	
 	
 	public int move(boolean played)
 	{
 		if(!played) return 0;
+		
+		if(touched && type == 4)
+		{
+			destroytime ++;
+			if(destroytime >= 30) y=0;
+		}
+	
 		y -= dropspeed;
 		if(y < 60) return -1;
 		return 0;
@@ -73,17 +77,6 @@ public class square {
 		}
 		
 		return true;
-	}
-	
-	public void destorySelfOndelay()
-	{
-		Timer t = new Timer();
-		t.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				y = 0;
-			}
-		}, 1000);
 	}
 	
 	public void drawImg(Graphics g)
