@@ -36,7 +36,7 @@ public class LayerRecord {
 				g.drawString("你(" + String.valueOf(level)+")", 310, 260 + pos * 20);
 				pos++;
 				hasdraw = true;
-				g.setColor(Color.GREEN);
+				g.setColor(Color.YELLOW);
 			}
 			
 			if(pos/2 >= size) break;
