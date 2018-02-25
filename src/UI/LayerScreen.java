@@ -62,7 +62,7 @@ public class LayerScreen {
 		for(int i = squares.size() - 1; i >= 0; i--)
 		{
 			square s = squares.get(i);
-			if(-1 == s.move())
+			if(-1 == s.move(GameStat))
 			{
 				squares.remove(i);
 				continue;
@@ -77,35 +77,31 @@ public class LayerScreen {
 		if (player == null) return;
 		square s = null;
 		
+		player.drop(GameStat);
+		if(null != (s = touched()))
+		{
+			player.y = s.y - 30;
+			whenTouch(s);
+		}
+		
 		if(1 == player.direction)
 		{
-			player.moveleft();
+			player.moveleft(GameStat);
 			if(null != touched()) 
 			{
-				player.moveright();
+				player.moveright(GameStat);
 			}
 		}
 		else if(2 == player.direction)
 		{
-			player.moveright();
+			player.moveright(GameStat);
 			if(null != touched())
 			{
-				player.moveleft();
+				player.moveleft(GameStat);
 			}
 		}
 		
 		player.setRunSpeed(4);
-		player.drop();
-		if(null != (s = touched()))
-		{
-			do
-			{
-				player.y = player.y - player.dropspeed;
-			}
-			while(null != touched());
-			player.y = player.y - square.dropspeed;
-			whenTouch(s);
-		}
 		
 		player.drawImg(g);
 	}
@@ -143,9 +139,9 @@ public class LayerScreen {
 	{
 		for(square s:squares)
 		{
-			if(player.x+19 > s.x && player.x < s.x + 69)
+			if(player.x+19 >= s.x && player.x <= s.x + 69)
 			{
-				if(player.y+29 > s.y && player.y < s.y + 15)
+				if(player.y+29 >= s.y && player.y <= s.y + 15)
 				{													
 					return s;
 				}		

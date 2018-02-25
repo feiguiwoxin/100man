@@ -34,6 +34,7 @@ public class square {
 	
 	public int gettouched()
 	{
+		if(type == 4) return 0;
 		if(touched) return 1;
 		return 0;
 	}
@@ -51,8 +52,9 @@ public class square {
 	}
 	
 	
-	public int move()
+	public int move(boolean played)
 	{
+		if(!played) return 0;
 		y -= dropspeed;
 		if(y < 60) return -1;
 		return 0;

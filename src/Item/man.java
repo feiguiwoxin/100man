@@ -32,8 +32,9 @@ public class man {
 		g.drawImage(Man, x, y, null);
 	}
 	
-	public void drop()
+	public void drop(boolean played)
 	{
+		if(!played) return;
 		y += dropspeed;
 	}
 	
@@ -42,14 +43,16 @@ public class man {
 		runspeed = speed;
 	}
 	
-	public void moveleft()
+	public void moveleft(boolean played)
 	{
+		if(!played) return;
 		x -= runspeed;
 		if(x < 10) x = 10;
 	}
 	
-	public void moveright()
+	public void moveright(boolean played)
 	{
+		if(!played) return;
 		x += runspeed;
 		if(x > 260) x = 260;
 	}

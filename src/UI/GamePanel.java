@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public GamePanel()
 	{
-		this.setSize(GameFrame.WIDTH, GameFrame.HEIGHT - 32);
+		this.setSize(GameFrame.WIDTH, GameFrame.HEIGHT - 28);
 		screen = new LayerScreen();
 		record = new LayerRecord();
 		score = new LayerScore();
@@ -66,7 +66,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		g.setColor(Color.YELLOW);
 		g.setFont(new Font("宋体",Font.BOLD,20));
-		g.drawImage(BGs.get(square.dropspeed - 1), 0, 0, GameFrame.WIDTH, GameFrame.HEIGHT - 32, null);
+		g.drawImage(BGs.get(square.dropspeed - 1), 0, 0, GameFrame.WIDTH, GameFrame.HEIGHT - 28, null);
 		g.drawImage(Screen, 0, 0, null);
 		screen.drawImg(g);
 		score.drawImg(g);
