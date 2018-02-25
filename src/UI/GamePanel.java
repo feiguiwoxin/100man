@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.ImageIcon;
@@ -25,12 +26,25 @@ import Start.GameStart;
 public class GamePanel extends JPanel implements Runnable{
 	public static final Image Screen_S = new ImageIcon(GameStart.class.getResource("/IMG/Screen_S.png")).getImage();
 	public static final Image Screen_P = new ImageIcon(GameStart.class.getResource("/IMG/Screen_P.png")).getImage();
-	public static final Image BG = new ImageIcon(GameStart.class.getResource("/IMG/BG.jpg")).getImage();
+	private static final Image BG1 = new ImageIcon(GameStart.class.getResource("/IMG/BG1.png")).getImage();
+	private static final Image BG2 = new ImageIcon(GameStart.class.getResource("/IMG/BG2.png")).getImage();
+	private static final Image BG3 = new ImageIcon(GameStart.class.getResource("/IMG/BG3.png")).getImage();
+	private static final Image BG4 = new ImageIcon(GameStart.class.getResource("/IMG/BG4.png")).getImage();
+	private static ArrayList<Image> BGs = null;
 	private LayerScreen screen = null;
 	private LayerRecord record = null;
 	private LayerScore score = null;
 	private int step = 0;
 	private Image Screen = null;
+	
+	static
+	{
+		BGs = new ArrayList<Image>();
+		BGs.add(BG1);
+		BGs.add(BG2);
+		BGs.add(BG3);
+		BGs.add(BG4);
+	}
 	
 	public GamePanel()
 	{
@@ -52,7 +66,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		g.setColor(Color.GREEN);
 		g.setFont(new Font("宋体",Font.BOLD,20));
-		g.drawImage(BG, 0, 0, GameFrame.WIDTH, GameFrame.HEIGHT - 32, null);
+		g.drawImage(BGs.get(square.dropspeed - 1), 0, 0, GameFrame.WIDTH, GameFrame.HEIGHT - 32, null);
 		g.drawImage(Screen, 0, 0, null);
 		screen.drawImg(g);
 		score.drawImg(g);
