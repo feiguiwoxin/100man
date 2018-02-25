@@ -205,7 +205,6 @@ public class GamePanel extends JPanel implements Runnable{
 			if(score.level == 99)
 			{
 				JOptionPane.showMessageDialog(null, "通关了，膜拜大神~~");
-				ResetGame();
 				break;
 			}
 			

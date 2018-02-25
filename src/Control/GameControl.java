@@ -25,6 +25,18 @@ public class GameControl extends KeyAdapter{
 			return;
 		}
 		
+		if(e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == (KeyEvent.VK_S + 32))
+		{
+			gp.RecordGame();
+			return;
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_L || e.getKeyCode() == (KeyEvent.VK_L + 32))
+		{
+			gp.LoadGame();;
+			return;
+		}
+		
 		if(e.getKeyCode() != KeyEvent.VK_LEFT && e.getKeyCode() != KeyEvent.VK_RIGHT)
 		{
 			e.consume();

@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import Item.record;
 
 public class LayerRecord {
@@ -78,6 +80,7 @@ public class LayerRecord {
 	private void LoadRecord()
 	{
 		File file = new File("./rank.dat");
+
 		ObjectInputStream os = null;
 	
 		try {
@@ -89,6 +92,10 @@ public class LayerRecord {
 			records.add(new record("无名",0));
 			records.add(new record("无名",0));
 			records.add(new record("无名",0));
+			if(file.exists())
+			{
+				JOptionPane.showMessageDialog(null, "记录被破坏，重置记录");
+			}
 		}
 		finally
 		{
