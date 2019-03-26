@@ -4,46 +4,59 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JButton;
 
 import Control.GameControl;
-import Control.OptionControl;
 import Item.square;
 import Start.GameStart;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements Runnable{
-	public static final Image Screen_S = new ImageIcon(GameStart.class.getResource("/IMG/Screen_S.png")).getImage();
-	public static final Image Screen_P = new ImageIcon(GameStart.class.getResource("/IMG/Screen_P.png")).getImage();
-	private static final Image BG1 = new ImageIcon(GameStart.class.getResource("/IMG/BG1.png")).getImage();
-	private static final Image BG2 = new ImageIcon(GameStart.class.getResource("/IMG/BG2.png")).getImage();
-	private static final Image BG3 = new ImageIcon(GameStart.class.getResource("/IMG/BG3.png")).getImage();
-	private static final Image BG4 = new ImageIcon(GameStart.class.getResource("/IMG/BG4.png")).getImage();
-	private static ArrayList<Image> BGs = null;
+	public static final Image Screen1 = new ImageIcon(GameStart.class.getResource("/IMG/screen.png")).getImage();
+	private static final Image BG = new ImageIcon(GameStart.class.getResource("/IMG/background.png")).getImage();
+	//private static ArrayList<Image> BGs = null;
 	private LayerScreen screen = null;
 	private LayerRecord record = null;
 	private LayerScore score = null;
 	private int step = 0;
 	private Image Screen = null;
 	
-	static
-	{
-		BGs = new ArrayList<Image>();
-		BGs.add(BG1);
-		BGs.add(BG2);
-		BGs.add(BG3);
-		BGs.add(BG4);
+	class OptionAction implements ActionListener{//鼠标监听事件
+		int K;
+		private GamePanel gp = null;
+		public OptionAction(GamePanel gp,int k)
+		{
+			K=k;
+			this.gp = gp;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			if(K==1)
+				gp.StartOrContinue();
+			else if(K==2)
+				gp.LoadGame();
+			else
+				gp.RecordGame();
+		}
 	}
+	
 	
 	public GamePanel()
 	{
@@ -51,9 +64,22 @@ public class GamePanel extends JPanel implements Runnable{
 		screen = new LayerScreen();
 		record = new LayerRecord();
 		score = new LayerScore();
-		Screen = Screen_S;
+		Screen = Screen1;
+		setLayout(null);
+		JButton b[]= {new JButton("开始/暂停"),new JButton("上次游戏"),new JButton("保存游戏")};
+		this.add(b[0]);
+		this.add(b[1]);
+		this.add(b[2]);
+		b[0].setBounds(300,70,100,30);
+		b[1].setBounds(300,110,100,30);
+		b[2].setBounds(300,150,100,30);
+		OptionAction startAction = new OptionAction(this,1);
+		OptionAction lastAction = new OptionAction(this,2);
+		OptionAction saveAction = new OptionAction(this,3);
+		b[0].addActionListener(startAction);
+		b[1].addActionListener(lastAction);
+		b[2].addActionListener(saveAction);
 		
-		this.addMouseListener(new OptionControl(this));
 		this.addKeyListener(new GameControl(this, screen.getPlayer()));
 	}	
 	
@@ -64,18 +90,19 @@ public class GamePanel extends JPanel implements Runnable{
 		this.requestFocus();
 		
 		g.setColor(Color.YELLOW);
-		g.setFont(new Font("瀹嬩綋",Font.BOLD,20));
-		g.drawImage(BGs.get(square.dropspeed - 1), 0, 0, GameFrame.WIDTH, GameFrame.HEIGHT - 28, null);
+		g.setFont(new Font("宋体",Font.BOLD,20));		
 		g.drawImage(Screen, 0, 0, null);
+		g.drawImage(BG, 0, 60, GameFrame.WIDTH-140, GameFrame.HEIGHT - 28, null);//背景
 		screen.drawImg(g);
 		score.drawImg(g);
 		record.drawImg(g, score.level);
+
+		
 	}
 	
 	public void StartGame()
 	{
 		screen.GameStat = true;
-		Screen = Screen_P;
 		Thread t = new Thread(this);
 		t.start();
 	}
@@ -83,7 +110,6 @@ public class GamePanel extends JPanel implements Runnable{
 	public void StopGame()
 	{
 		screen.GameStat = false;
-		Screen = Screen_S;
 		this.repaint();
 	}
 	
@@ -102,7 +128,6 @@ public class GamePanel extends JPanel implements Runnable{
 	public void ResetGame()
 	{
 		screen.GameStat = false;
-		Screen = Screen_S;
 		step = 0;
 		screen.ClearSquare();
 		screen.init();
@@ -110,7 +135,7 @@ public class GamePanel extends JPanel implements Runnable{
 		this.repaint();
 	}
 	
-	public void RecordGame()
+	public void RecordGame()//保存游戏
 	{
 		StopGame();
 		ArrayList<square> squares = screen.getSquares();
@@ -118,7 +143,7 @@ public class GamePanel extends JPanel implements Runnable{
 		BufferedWriter bw = null;
 		try {
 			bw = new BufferedWriter(new FileWriter(file));
-			bw.write("man,"+screen.getPlayer().x+","+screen.getPlayer().y+","+screen.getPlayer().health+"\r\n");
+			bw.write("man,"+screen.getPlayer().x+","+screen.getPlayer().y+","+(screen.getPlayer().health)+"\r\n");
 			bw.write("score,"+score.level+"\r\n");
 			bw.write("step,"+step+"\r\n");
 			for(square s:squares)
@@ -141,26 +166,25 @@ public class GamePanel extends JPanel implements Runnable{
 		JOptionPane.showMessageDialog(null, "Save OK~~");
 	}
 	
-	public void LoadGame()
+	public void LoadGame()//读取游戏
 	{
 		File file = new File("./record.dat");
 		String line = null;
 		String[] data = null;
 		
 		screen.GameStat = false;
-		Screen = Screen_S;
 		screen.ClearSquare();
 		
 		if(!file.exists())
 		{
-			JOptionPane.showMessageDialog(null, "娌℃湁瀛樻。鏁版嵁");
+			JOptionPane.showMessageDialog(null, "没有存档数据");
 		}
 		
 		BufferedReader br = null;
 		
 		try {
 			br = new BufferedReader(new FileReader(file));
-			while((line = br.readLine()) != null)
+			while((line = br.readLine()) != null)//读文件，每次读一行
 			{
 				data = line.split(",");
 				if(data[0].equals("man"))
@@ -197,7 +221,7 @@ public class GamePanel extends JPanel implements Runnable{
 			}
 		}
 		
-		square.dropspeed = 1 + score.level/30;
+		square.dropspeed = 2 + score.level/30;
 		this.repaint();
 	}
 
@@ -207,23 +231,22 @@ public class GamePanel extends JPanel implements Runnable{
 		while(screen.isGameOk())
 		{
 			step ++;
-			if(step * square.dropspeed % 90 == 0)
-			{
-				screen.CreatSquare(420);
-				score.level = step / 120;
-				square.dropspeed = 1 + score.level/30;
+			if(step * square.dropspeed % 90 == 0) {
+				screen.CreatSquare(460);
+				score.level = step / 120;//运行120次run函数level+1
+				square.dropspeed = 1 + score.level/30;//每30层难度增加一次
 			}
 			
 			this.repaint();
 			
-			if(score.level == 99)
+			if(score.level == 100)
 			{
-				JOptionPane.showMessageDialog(null, "閫氬叧浜嗭紝鑶滄嫓澶х~~");
+				JOptionPane.showMessageDialog(null, "恭喜你，通关了！");
 				break;
 			}
 			
 			try {
-				Thread.sleep(33);
+				Thread.sleep(30);//延迟更新
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -235,7 +258,7 @@ public class GamePanel extends JPanel implements Runnable{
 			
 			if(pos >= 0)
 			{
-				String name = JOptionPane.showInputDialog("鎮ㄧ牬绾綍浜嗭紝璇疯緭鍏ユ偍鐨勫鍚嶏細", "鏃犲悕");
+				String name = JOptionPane.showInputDialog("您破纪录了，请输入您的姓名：", "无名");
 				record.RankIn(name, score.level, pos);
 			}
 			else

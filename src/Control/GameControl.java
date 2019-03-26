@@ -19,27 +19,28 @@ public class GameControl extends KeyAdapter{
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
+		
 		if(e.getKeyCode() == KeyEvent.VK_ENTER)
 		{
 			gp.StartOrContinue();
 			return;
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == (KeyEvent.VK_S + 32))
+		if(e.getKeyCode() == KeyEvent.VK_S)//按S保存
 		{
 			gp.RecordGame();
 			return;
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_L || e.getKeyCode() == (KeyEvent.VK_L + 32))
+		if(e.getKeyCode() == KeyEvent.VK_L)//按L返回上次游戏
 		{
-			gp.LoadGame();;
+			gp.LoadGame();
 			return;
 		}
 		
 		if(e.getKeyCode() != KeyEvent.VK_LEFT && e.getKeyCode() != KeyEvent.VK_RIGHT)
 		{
-			e.consume();
+			e.consume();//销毁实例
 		}
 		else
 		{
