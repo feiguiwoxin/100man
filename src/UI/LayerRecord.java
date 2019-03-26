@@ -1,6 +1,7 @@
 package UI;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +15,7 @@ import javax.swing.JOptionPane;
 import Item.record;
 
 public class LayerRecord {
-	private ArrayList<record> records = null;
+	private ArrayList<record> records = null;//¶¯Ì¬Êı×é
 	
 	public LayerRecord()
 	{
@@ -24,35 +25,38 @@ public class LayerRecord {
 	public void drawImg(Graphics g,int level)
 	{
 		int pos = 0;
-		int size = records.size();
+		int size = records.size();//»ñÈ¡¼ÇÂ¼µÄ¸öÊı
 		boolean hasdraw = false;
+		g.setFont(new Font("¿¬Ìå",Font.BOLD,35));
+		g.setColor(Color.GRAY);//ÉèÖÃ×ÖÌåÑÕÉ«
+		g.drawString("¼ÇÂ¼",310,230);
+		g.setFont(new Font("¿¬Ìå",Font.BOLD,20));
 		for(record r:records)
 		{			
-			if(level >= r.level && false == hasdraw)
+			if(level >= r.level && hasdraw == false)//µ±Ç°²ãÊı´óÓÚ¼ÇÂ¼µÄ²ãÊı
 			{
-				g.setColor(Color.RED);
-				g.drawString("ç¬¬"+(pos/2+1)+"å:", 310, 260 + pos * 20);
+				g.setColor(Color.RED);//ÉèÖÃ×ÖÌåÑÕÉ«£¨ºìÉ«ÔòÎªµ±Ç°½øĞĞµÄ£©
+				g.drawString("µÚ"+(pos/2+1)+"Ãû:", 310, 265 + pos * 20);//ÏÔÊ¾ÅÅÃûµÄÒ»ĞĞ
 				pos++;
-				g.drawString("ä½ (" + String.valueOf(level)+")", 310, 260 + pos * 20);
+				g.drawString("Äã(" + String.valueOf(level)+")", 310, 265 + pos * 20);//ÏÔÊ¾²ãÊıµÄÒ»ĞĞ
 				pos++;
 				hasdraw = true;
-				g.setColor(Color.YELLOW);
 			}
-			
+			g.setColor(Color.YELLOW);
 			if(pos/2 >= size) break;
-			g.drawString("ç¬¬"+(pos/2+1)+"å:", 310, 260 + pos * 20);
+			g.drawString("µÚ"+(pos/2+1)+"Ãû:",  310, 265 + pos * 20);
 			pos++;
-			g.drawString(r.name+"("+String.valueOf(r.level)+")", 310, 260 + pos * 20);
+			g.drawString(r.name+"("+String.valueOf(r.level)+")", 310, 265 + pos * 20);
 			pos++;
 		}
 	}
 	
-	public int needRank(int level)
+	public int needRank(int level)//·µ»Ø²ãÊı×îµÍµÄÎ»ÖÃ
 	{
 		int pos = 0;
 		for(pos = 0;pos < records.size();pos++)
 		{
-			if(level >= records.get(pos).level)
+			if(records.get(pos).level <= level)//µ±Ç°²ãÊı´óÓÚ¼ÇÂ¼ÖĞµÄ²ãÊı
 			{
 				break;
 			}
@@ -65,11 +69,11 @@ public class LayerRecord {
 		return -1;
 	}
 	
-	public void RankIn(String name,int level,int pos)
+	public void RankIn(String name,int level,int pos)//½«³É¼¨´æÈërecordÊı×é£¬²¢½«Ô­±¾×îºóÒ»¸ö³É¼¨É¾³ı
 	{
 		if(name == null)
 		{
-			name = "æ— å";
+			name = "ÎŞÃû";
 		}
 		records.add(pos, new record(name, level));
 		records.remove(records.size() - 1);
@@ -77,24 +81,24 @@ public class LayerRecord {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void LoadRecord()
+	private void LoadRecord()//¶ÁÈ¡¼ÇÂ¼
 	{
-		File file = new File("./rank.dat");
+		File file = new File("./rank.dat");//´æ·Å¼ÍÂ¼µÄÎÄ¼ş
 
 		ObjectInputStream os = null;
-	
+
 		try {
 			os = new ObjectInputStream(new FileInputStream(file));
-			records = (ArrayList<record>) os.readObject();
+			records = (ArrayList<record>) os.readObject();//½«¼ÇÂ¼¶Á³öÎÄ¼ş
 		} catch (Exception e) {
 			records = new ArrayList<record>();
-			records.add(new record("æ— å",0));
-			records.add(new record("æ— å",0));
-			records.add(new record("æ— å",0));
-			records.add(new record("æ— å",0));
+			records.add(new record("ÎŞ",0));
+			records.add(new record("ÎŞ",0));
+			records.add(new record("ÎŞ",0));
+			records.add(new record("ÎŞ",0));
 			if(file.exists())
 			{
-				JOptionPane.showMessageDialog(null, "è®°å½•è¢«ç ´åï¼Œé‡ç½®è®°å½•");
+				JOptionPane.showMessageDialog(null, "¼ÇÂ¼±»ÆÆ»µ£¬ÖØÖÃ¼ÇÂ¼");
 			}
 		}
 		finally
@@ -106,7 +110,7 @@ public class LayerRecord {
 		}
 	}
 	
-	private void SaveRecord()
+	private void SaveRecord()//±£´æ¼ÇÂ¼
 	{
 		if(records == null) return;
 			
@@ -115,9 +119,9 @@ public class LayerRecord {
 		
 		try {
 			os = new ObjectOutputStream(new FileOutputStream(file));
-			os.writeObject(records);
+			os.writeObject(records);//½«¼ÇÂ¼Ğ´ÈëÎÄ¼ş
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();//´òÓ¡´íÎóĞÅÏ¢
 		}
 		finally
 		{
@@ -128,4 +132,5 @@ public class LayerRecord {
 			}
 		}
 	}
+
 }

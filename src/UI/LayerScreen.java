@@ -9,9 +9,9 @@ import Item.square;
 public class LayerScreen {
 	private ArrayList<square> squares = new ArrayList<square>();
 	private man player = new man();
-	public boolean GameStat = false;
+	public boolean GameStat = false;//ÓÎÏ·×´Ì¬
 	
-	public LayerScreen()
+	LayerScreen()
 	{
 		init();
 	}
@@ -26,13 +26,13 @@ public class LayerScreen {
 		return squares;
 	}
 	
-	public void init()
+	public void init()//³õÊ¼»¯
 	{
 		square.init();
 		player.init();
 		
-		squares.add(new square(115, 150, 2));
-		for(int i = 240; i <= 420; i = i + 90)
+		squares.add(new square(115, 210, 1));//³õÊ¼¸øÈËÎïÒ»¸ö°å×Ó
+		for(int i = 300; i < 420; i = i + 70)
 		{
 			CreatSquare(i);
 		}
@@ -44,114 +44,10 @@ public class LayerScreen {
 		paintPlayer(g);
 	}	
 	
-	public void CreatSquare(int yp)
+	//1/6¸ÅÂÊÎª0£¬5/12¸ÅÂÊÎª1£¬5/12¸ÅÂÊÎª2
+	private int NumofSquare()//Ã¿Ò»²ã°å×ÓµÄÊıÁ¿
 	{
-		int squarenum = NumofSquare();
-		if(0 == squarenum) return;
-		
-		int pos = PosofSquare(squarenum);
-		for(int i = 0; i < squarenum; i++)
-		{
-			int type = TypeofSquare();
-			squares.add(new square(pos + i * 110, yp, type));
-		}
-	}
-	
-	private void paintSquare(Graphics g)
-	{
-		for(int i = squares.size() - 1; i >= 0; i--)
-		{
-			square s = squares.get(i);
-			if(-1 == s.move(GameStat))
-			{
-				squares.remove(i);
-				continue;
-			}
-			
-			s.drawImg(g);
-		}
-	}
-	
-	private void paintPlayer(Graphics g)
-	{
-		if (player == null) return;
-		square s = null;
-		
-		player.drop(GameStat);
-		if(null != (s = touched()))
-		{
-			player.y = s.y - 30;
-			whenTouch(s);
-		}
-		
-		if(1 == player.direction)
-		{
-			player.moveleft(GameStat);
-			if(null != touched()) 
-			{
-				player.moveright(GameStat);
-			}
-		}
-		else if(2 == player.direction)
-		{
-			player.moveright(GameStat);
-			if(null != touched())
-			{
-				player.moveleft(GameStat);
-			}
-		}
-		
-		player.setRunSpeed(4);
-		
-		player.drawImg(g);
-	}
-	
-	private void whenTouch(square s)
-	{
-		int type = s.type;
-		
-		if(type != 3)
-		{
-			player.health = 2;
-		}
-		
-		if(s.fristTouch())
-		{
-			switch(type)
-			{
-			case 0:
-				player.setRunSpeed(2);
-				break;
-			case 1:
-				player.y = player.y - 45;
-				break;
-			case 3:
-				player.health = player.health -1;
-				break;
-			}
-		}
-	}
-	
-	public square touched()
-	{
-		for(square s:squares)
-		{
-			if(player.x+19 >= s.x && player.x <= s.x + 69)
-			{
-				if(player.y+29 >= s.y && player.y <= s.y + 15)
-				{													
-					return s;
-				}		
-			}
-		}		
-		return null;
-	}
-	
-	
-	//1/6æ¦‚ç‡ä¸º0ï¼Œ5/12æ¦‚ç‡ä¸º1ï¼Œ5/12æ¦‚ç‡ä¸º2
-	private int NumofSquare()
-	{
-		int num = (int)(10*Math.random());
+		int num = (int)(12*Math.random());
 		if(num == 0)
 		{
 			return 0;
@@ -166,10 +62,21 @@ public class LayerScreen {
 		}
 	}
 	
-	private int TypeofSquare()
+	private int TypeofSquare()//Ëæ»ú²úÉú°å×ÓÀàĞÍ£¬²úÉú¶¤×Ó¸ÅÂÊÎª1/3£¬ÆäËû¸ÅÂÊÎª2/15£¬0Îª¶¤×Ó£¬1ÎªÆÕÍ¨°å£¬2Îª·­°å£¬3Îªµ¯»É£¬4¡¢5Îª´«ËÍ´ø
 	{
-		int type = (int)(9*Math.random());
-		return type/2;
+		int type = (int)(15*Math.random());
+		if(type<5)
+			return 0;
+		else if(type<7)
+			return 1;
+		else if(type<9)
+			return 2;
+		else if(type<11)
+			return 3;
+		else if(type<13)
+			return 4;
+		else 
+			return 5;
 	}
 	
 	private int PosofSquare(int num)
@@ -184,9 +91,118 @@ public class LayerScreen {
 		}
 	}
 	
+	public void CreatSquare(int yp)
+	{
+		int squarenum = NumofSquare();//Ã¿ĞĞ¼¸¸ö°å×Ó
+		if(squarenum == 0) return;
+		
+		int pos = PosofSquare(squarenum);//°å×ÓµÄÎ»ÖÃ
+		for(int i = 0; i < squarenum; i++)
+		{
+			int type = TypeofSquare();
+			squares.add(new square(pos + i * 110, yp, type));
+		}	
+	}
+	
+	private void paintSquare(Graphics g)//»­³ö°å×Ó
+	{
+		for(int i = squares.size() - 1; i >= 0; i--)
+		{
+			square s = squares.get(i);
+			if(s.move(GameStat) == -1)//°å×ÓÉÏÉıµ½Ò»¶¨¸ß¶ÈºóÏûÊ§
+			{
+				squares.remove(i);
+				continue;
+			}
+			
+			s.drawImg(g);
+		}
+	}
+	
+	private void paintPlayer(Graphics g)//»­³öÈËÎï
+	{
+		if (player == null) return;
+		square s = null;
+		
+		player.drop(GameStat);
+		if((s = touched()) != null)
+		{
+			player.y = s.y - 30;
+			whenTouch(s);
+		}
+		
+		if(player.direction == 1)
+		{
+			player.moveleft(GameStat);
+			if(touched() != null) //Ïò×ó×²µ½°å×ÓÊ±²»ÄÜ¼ÌĞøÏò×óÒÆ¶¯
+			{
+				player.moveright(GameStat);
+			}
+		}
+		else if(player.direction == 2)
+		{
+			player.moveright(GameStat);
+			if(touched() != null) //ÏòÓÒ×²µ½°å×ÓÊ±²»ÄÜ¼ÌĞøÏòÓÒÒÆ¶¯
+			{
+				player.moveleft(GameStat);
+			}
+		}
+		
+		player.setRunSpeed(4);
+		
+		player.drawImg(g);
+	}
+	
+	private void whenTouch(square s)//×Ü¹²12¸ñÉúÃüÖµ£¬²Èµ½¶¤×Ó-5ÉúÃü£¬²Èµ½ÆäËû+1ÉúÃü£¬ÖØ¸´²ÈÌ¤ÎŞĞ§
+	{
+		int type = s.type;
+
+		if(s.firstTouch())
+		{
+			switch(type)
+			{
+			case 0://¶¤×Ó
+				player.health = player.health -5;
+				break;
+			case 3://µ¯»É
+				player.y = player.y - 25;
+				break;
+			case 4://´«ËÍ´ø
+				player.x -= 2 ;
+				break;
+			case 5://´«ËÍ´ø
+				player.x += 2 ;
+				break;
+			}
+		}
+		
+		if(s.firstblood())
+		{
+			if(player.health < 12)
+				player.health ++;
+		}
+	}
+	
+	public square touched()
+	{
+		for(square s:squares)
+		{
+			if(player.x+19 >= s.x && player.x <= s.x + 69)//Õ¾ÔÚ°å×ÓÉÏ¿ÉÒÆ¶¯µÄ¾àÀë
+			{
+				if(player.y+29 >= s.y && player.y <= s.y + 15)
+				{													
+					return s;
+				}		
+			}
+		}		
+		return null;
+	}
+	
+	
+
 	public boolean isGameOk()
 	{
-		if(player.y < 60 || player.y > 390 || player.health == 0 || false == this.GameStat)	
+		if(player.y < 80 || player.y > 450 || player.health <= 0 || this.GameStat == false)	
 		{
 			return false;
 		}	
